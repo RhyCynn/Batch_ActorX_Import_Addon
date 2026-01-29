@@ -1,0 +1,16 @@
+schema_version = "1.0.0"
+id = "batch_actorx_import_addon"
+version = "0.0.1"
+name = "batch_actorx_import_addon"
+tagline = "Batch ActorX Import addon for Blender"
+maintainer = "RhyCynn"
+type = "add-on"
+website = "https://github.com/RhyCynn/batch_actorx_import_addon"
+tags = ["Import-Export"]
+blender_version_min = "4.2.0"
+blender_version_max = "4.9.9"
+license = ["SPDX:MIT"]
+wheels = [
+    "./wheels/ruamel.yaml-0.18.10-py3-none-any.whl",
+    "./wheels/magicattr-0.1.6-py2.py3-none-any.whl",
+]

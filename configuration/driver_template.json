@@ -1,0 +1,102 @@
+{
+    "AxUEViewerMat":{
+        "import_what": "UEViewerMat",
+        "filter_glob": "*.mat",
+        "file_path": "",
+        "display_name": ""
+    },
+    "AxTexturePath":{
+        "import_what": "TexturePath",
+        "filter_glob": "*",
+        "file_path": "",
+        "display_name": ""
+    },
+    "AxDiffuseMap":{
+        "import_what": "DiffuseMap",
+        "filter_glob": "*.tga;*.dds;*.png",
+        "file_path": "",
+        "display_name": ""
+    },
+    "AxSpecularMap":{
+        "import_what": "SpecularMap",
+        "filter_glob": "*.tga;*.dds;*.png",
+        "file_path": "",
+        "display_name": ""
+    },
+    "AxNormalMap":{
+        "import_what": "NormalMap",
+        "filter_glob": "*.tga;*.dds;*.png",
+        "file_path": "",
+        "display_name": ""
+    },
+    "AxAnimation":{
+        "import_what": "Animation",
+        "filter_glob": "*.psa",
+        "file_path": "",
+        "display_name": "",
+        "hide_advanced_options": true,
+        "conjugate_root": true,
+        "conjugate_non_root": true,
+        "from_axis_forward": "X",
+        "from_axis_up": "Z",
+        "to_axis_forward": "Y",
+        "to_axis_up": "Z",
+        "use_translation": true,
+        "interpolation": "QUART",
+        "easing": "AUTO"
+    },
+    "AxMesh":{
+        "import_what": "Mesh",
+        "filter_glob": "*.psk;*.pskx",
+        "file_path": "",
+        "display_name": "",
+        "hide_advanced_options": true,
+        "remove_doubles": true,
+        "smooth_shading": true,
+        "invert_green_channel": true,
+        "rebuild_blue_channel": false,
+        "from_axis_forward": "X",
+        "from_axis_up": "Z",
+        "to_axis_forward": "Y",
+        "to_axis_up": "Z"
+    },
+    "AxModel":{
+        "import_what": "Model",
+        "filter_glob": "*.psk",
+        "file_path": "",
+        "display_name": "",
+        "hide_advanced_options": true,
+        "conjugate_root": true,
+        "conjugate_non_root": true,
+        "from_axis_forward": "X",
+        "from_axis_up": "Z",
+        "to_axis_forward": "Y",
+        "to_axis_up": "Z",
+        "parent_name": "",
+        "parent_model": "no_parent",
+        "parent_link": "no_link",
+        "builder": "direct_matrix",
+        "plus_vector": "010",
+        "detect_reversed_bones": true,
+        "show_bones_as_joints": true,
+        "material_index": -1,
+        "mesh_index": -1,
+        "animation_index": -1,
+        "remove_doubles": true,
+        "smooth_shading": true,
+        "invert_green_channel": true,
+        "rebuild_blue_channel": false
+    },
+    "AxAsset":{
+        "import_what": "Asset",
+        "filter_glob": "",
+        "file_path": "",
+        "display_name": ""
+    },
+    "AxImport":{
+        "import_what": "Batch",
+        "asset_folder_index": -1,
+        "model_index": -1,
+        "blender_collection": "ActorX Import"
+    }
+}

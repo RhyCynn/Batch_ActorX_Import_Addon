@@ -1,0 +1,36 @@
+{
+    "socket_colors": {
+        "model_socket": "#c7c729FF",
+        "mesh_socket": "#6363c7FF",
+        "animation_socket": "#5dc5aeff"
+    },
+    "import_node": {
+        "default_width": 200,
+        "use_property_split": true,
+        "node_color": "#572840"
+    },
+    "model_node": {
+        "default_width": 300,
+        "hide_texture_maps": true,
+        "hide_advanced_options": true,
+        "hide_model_linking": true,
+        "use_property_split": true,
+        "node_color": "#572870"
+    },
+    "mesh_node": {
+        "default_width": 300,
+        "hide_texture_maps": true,
+        "hide_advanced_options": true,
+        "use_property_split": true,
+        "node_color": "#5728a0"
+    },
+    "animation_node": {
+        "default_width": 300,
+        "hide_advanced_options": true,
+        "use_property_split": true,
+        "node_color": "#5728d0"
+    },
+    "options": {
+        "dump_configuration": false
+    }
+}

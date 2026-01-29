@@ -1,0 +1,14 @@
+{
+    "head_to_body": {
+        "name": "Head to Body",
+        "description": "Links the import armature bone 'Dummy_Neck' to the target armature bone 'Bip01-Neck'.",
+        "source_bone": "Dummy_Neck",
+        "target_bone": "Bip01-Neck"
+    },
+    "hair_to_head": {
+        "name": "Hair to Head",
+        "description": "Links the import armature bone 'Dummy_Hair' to the target armature bone 'Dummy_Face'.",
+        "source_bone": "Dummy_Hair",
+        "target_bone": "Dummy_Face"
+    }
+}
