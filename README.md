@@ -27,7 +27,9 @@ Visually build your import using custom nodes.
 
 ## Important Information
 
-This is an advanced proof of concept in alpha. It may not import some assets correctly or crash Blender.
+This is an advanced proof of concept in alpha. I created it for my own use to see if I could actually make a node-based ui. I decided to release it to see if it would work for anyone else. 
+
+It has been through limited testing using assets from a single UE3 engine game. I created the core math used in it years ago by trial and error. It may not import other assets correctly or crash Blender.
 
 Full documentation will be added to the wiki as time permits.
 
