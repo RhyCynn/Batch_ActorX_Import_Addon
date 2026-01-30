@@ -5,22 +5,43 @@ Visually build your import using custom nodes.
 
 ![Example](nodes_example.png)
 
+- [Important Information](#important-information)
+- [Requirements](#requirements)
+- [Getting Started](#getting-started)
+- [Testing a Model](#testing-a-model)
+- [Materials and Textures (Model and Mesh Nodes)](#materials-and-textures-model-and-mesh-nodes)
+- [Basic Node Information](#basic-node-information)
+  - [ActorX Import (required)](#actorx-import-required)
+  - [ActorX Model](#actorx-model)
+  - [ActorX Mesh](#actorx-mesh)
+  - [ActorX Animation](#actorx-animation)
+- [Additional Animation Information](#additional-animation-information)
+  - [NLA Tracks](#nla-tracks)
+  - [Partial / Addon Animations](#partial--addon-animations)
+- [Troubleshooting](#troubleshooting)
+  - [Blender Crashes](#blender-crashes)
+  - [Nothing Imports](#nothing-imports)
+  - [Distorted Models](#distorted-models)
+- [Validating an Animation with UEViewer](#validating-an-animation-with-ueviewer)
+
+
 ## Important Information
 
 This is an advanced proof of concept in alpha. It may not import some assets correctly or crash Blender.
 
-Full documentation will be added to the wiki as time permits. See Testing a Model to get started.
+Full documentation will be added to the wiki as time permits.
 
 ## Requirements
 
 - Blender 4.2 or later. Blender 5.x is unsupported due to breaking API changes.
-- ActorX assets exported from ueviewer (umodel).
-- Knowledge of how ueviewer exports assets, especially where it saves the mat file and texture maps. 
+- Knowledge of how to install local addons and change editor types in Blender.
+- ActorX assets exported from UEViewer (umodel).
+- Knowledge of how UEViewer exports assets, especially where it saves the mat file and texture maps. 
 
 ## Getting Started
 
 - Install and enable the addon.
-- Export some assets using ueviewer. To simplify the import you should export assets into individual folders. For example: if you are exporting a model named Human_F_Heavy_Armor then put it into a folder of that name.
+- Export some assets using UEViewer. To simplify the import you should export assets into individual folders. For example: if you are exporting a model named Human_F_Heavy_Armor then put it into a folder of that name.
 - Recommended: Move the texture maps into the same folder as the .mat file.
 
 ## Testing a Model
@@ -37,6 +58,16 @@ Try to import a single model without textures.
 
 If nothing imports, the model is distorted or Blender crashes see the Troubleshooting section.
 
+## Materials and Textures (Model and Mesh Nodes)
+
+To import textures a .mat file must be selected. 
+Texture maps are searched for as follows:
+
+- If a Texture Path is selected that folder is searched.
+- If Texture Path is blank the .mat file folder is searched.
+
+If any are used, the Diffuse, Specular and Normal map file selectors override the .mat file.
+
 ## Basic Node Information
 
 ### ActorX Import (required)
@@ -47,7 +78,7 @@ Adds an Import Node. This is the root node that all other nodes are connected to
 - \+ Model: Add another model input.
 - \+ Mesh: Add another mesh input.
 
-Mesh Node inputs can be a static mesh (usually .pskx) or a model (usually .psk). Only the mesh is imported from models.
+Mesh Node inputs can be a static mesh (.pskx) or a model (.psk). Only the mesh is imported from models.
 
 ### ActorX Model
 
@@ -80,16 +111,6 @@ Adds an Animation Node.
 - Inputs: Another Animation Node.
 
 Chained animations are designed for partial or add-on animations. They are added to the model in the order of connection.
-
-## Materials and Textures (Model and Mesh Nodes)
-
-To import textures a .mat file must be selected. 
-Texture maps are searched for as follows:
-
-- If a Texture Path is selected that folder is searched.
-- If Texture Path is blank the .mat file folder is searched.
-
-If any are used, the Diffuse, Specular and Normal map file selectors override the .mat file.
 
 ## Additional Animation Information
 
@@ -128,4 +149,28 @@ Open the Blender console. A trace log is output there. Copy the output and paste
 
 Try changing combinations of the root, non-root and axis forward (usually X to -X) settings. 
 
-For animations also try the use translation setting. If nothing helps the addon is currently incompatible with your asset(s).
+For animations also try the use translation setting. If nothing helps the addon is currently likely incompatible with your asset(s).
+
+If your model looks fine but the animation distorts it, see the section below on Validating Animations with UEViewer.
+
+## Validating an Animation with UEViewer
+
+I highly suggest using the following procedure to make sure you have the right animation for a model:
+
+- Start UEViewer, select your game folder and click "OK".
+- Locate your model package using the tree or by searching for it in Flat view. Once found, select it and click "Open".
+- Use the "PgDn" key to change pages until you find the desired model.
+- Press "O" to access the package open dialog. Locate your animation package. 
+- Once found, select it, click the down arrow beside "Open" and select "Append (add to loaded set)".
+- Press "CTRL + A" to cycle through animation sets. The current set is shown in the lower left corner. The first set should work for the test.
+- Press the "]" key to change actions. These are also shown in the lower left corner. The model should show the first frame of the action.
+- You can use the spacebar key to play the animation or the "<" and ">" keys to move frame by frame.
+
+If the model is distorted then the selected animation is not the right one for the selected model. You can start over and try to find the correct animation package.
+
+If the model is not distorted do the following:
+
+- Create a new folder on your computer to export the current objects to.
+- Select "Tools", "Export current object" from the menu. Select the new folder you created, then click "OK".
+- Load the exported model and animation in the addon and take a screenshot of the results.
+- Create an issue and attach the screenshot, psk and psa files and I'll have a look at them as time permits.
