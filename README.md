@@ -10,6 +10,7 @@ Visually build your import using custom nodes.
 - [Getting Started](#getting-started)
 - [Testing a Model](#testing-a-model)
 - [Materials and Textures (Model and Mesh Nodes)](#materials-and-textures-model-and-mesh-nodes)
+- [Linking Models](#linking-models)
 - [Basic Node Information](#basic-node-information)
   - [ActorX Import (required)](#actorx-import-required)
   - [ActorX Model](#actorx-model)
@@ -69,6 +70,20 @@ Texture maps are searched for as follows:
 - If Texture Path is blank the .mat file folder is searched.
 
 If any are used, the Diffuse, Specular and Normal map file selectors override the .mat file.
+
+## Linking Models
+
+There is limited support for liking two models using a copy transforms constraint. The file "armature_links.json" in the "configuration" folder defines links. These links will be shown in the Parent Link dropdown of Model Nodes.
+
+Entries can be added, removed and changed as long as you are careful to keep the proper file format. Looking at the sample file you will see the following:
+
+- "head_to_body": This is the key for this entry. It must be unique.
+- "name": This is the text shown in the dropdown box.
+- "description": This is the text shown in the tooltip when hovering over the dropdown box.
+- "source_bone": This is the name of the bone in the source armature to link with.
+- "target_bone": This is the name of the bone in the target armature to link to.
+  
+The linking code was designed to test head to body and hair to head connections for models from TERA. Current plans are to extend the system to create any number of basic constraints per entry.
 
 ## Basic Node Information
 
