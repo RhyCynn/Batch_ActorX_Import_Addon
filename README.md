@@ -73,7 +73,7 @@ If any are used, the Diffuse, Specular and Normal map file selectors override th
 
 ## Linking Models
 
-There is limited support for liking two models using a copy transforms constraint. The file "armature_links.json" in the "configuration" folder defines links. These links will be shown in the Parent Link dropdown of Model Nodes.
+There is limited support for linking two models using a copy transforms constraint. The file "armature_links.json" in the "configuration" folder defines links. These links will be shown in the Parent Link dropdown of Model Nodes.
 
 Entries can be added, removed and changed as long as you are careful to keep the proper file format. Looking at the sample file you will see the following:
 
