@@ -28,9 +28,11 @@ def build_materials(context: Context, mesh_object: Mesh, prop: dict) -> None:
     specular_map = prop["specular_map"]["file_path"]
     normal_map = prop["normal_map"]["file_path"]
 
-    # a mat file must be selected, even if all three texture maps are added
-    if not ueviewer_mat:
-        echo.message("A .mat file was not selected. Skipping Texture Import.")
+    # a mat file or at least one texture map is required for a material
+    if not ueviewer_mat and not diffuse_map and not specular_map and not normal_map:
+        echo.message(
+            "Neither a .mat file nor at least one texture map was selected. Skipping Texture Import."
+        )
         return
 
     mat_file_path = None
@@ -54,8 +56,10 @@ def build_materials(context: Context, mesh_object: Mesh, prop: dict) -> None:
     else:
         search_path = mat_file_path
 
-    uev_materials = read_mat_file(material_file=ueviewer_mat)
+    uev_materials = {"Diffuse": None, "Specular": None, "Normal": None}
     texture_maps = {"diffuse": None, "specular": None, "normal": None}
+    if ueviewer_mat:
+        uev_materials = read_mat_file(material_file=ueviewer_mat)
 
     # if a texture map was set directly use it otherwise try to search for any
     # listed in the mat file
@@ -80,7 +84,7 @@ def build_materials(context: Context, mesh_object: Mesh, prop: dict) -> None:
     # build the shader node tree and position the nodes
     build_shader_node_tree(
         mesh_object=mesh_object,
-        uev_materials=texture_maps,
+        texture_maps=texture_maps,
         invert_green_channel=prop["invert_green_channel"],
     )
     position_nodes(mesh_object=mesh_object, invert_green_channel=True)
@@ -134,7 +138,7 @@ def read_mat_file(material_file: str) -> dict[str, str] | None:
 
 # --------------------------------------------------------------------------------------------------
 def build_shader_node_tree(
-    mesh_object: Object, uev_materials: dict[str, str], invert_green_channel: bool
+    mesh_object: Object, texture_maps: dict[str, str], invert_green_channel: bool
 ) -> None:
     """set up the blender shaders from the ueviewer materials."""
 
@@ -148,7 +152,7 @@ def build_shader_node_tree(
 
         principled_bsdf.name = "principled_bsdf"
 
-        if texture_filename := uev_materials.get("diffuse"):
+        if texture_filename := texture_maps.get("diffuse"):
             texture_filename = texture_filename.as_posix()
             echo.message("Loading Diffuse", indent_step=-1)
             tex_diffuse = node_tree.nodes.new("ShaderNodeTexImage")
@@ -157,7 +161,7 @@ def build_shader_node_tree(
             diffuse_texture = bpy.data.images.load(str(texture_filename))
             tex_diffuse.image = diffuse_texture
 
-        if texture_filename := uev_materials.get("specular"):
+        if texture_filename := texture_maps.get("specular"):
             echo.message("Loading Specular", indent_step=-1)
             tex_specular = node_tree.nodes.new("ShaderNodeTexImage")
             tex_specular.name = "tex_specular"
@@ -165,7 +169,7 @@ def build_shader_node_tree(
             specular_texture = bpy.data.images.load(str(texture_filename))
             tex_specular.image = specular_texture
 
-        if texture_filename := uev_materials.get("normal"):
+        if texture_filename := texture_maps.get("normal"):
             echo.message("Loading Normal", indent_step=-1)
             tex_normal = node_tree.nodes.new("ShaderNodeTexImage")
             tex_normal.name = "tex_normal"
@@ -191,7 +195,7 @@ def build_shader_node_tree(
             normal_map.name = "map_normal"
             normal_map.label = "Normal Map"
 
-        if texture_filename := uev_materials.get("diffuse"):
+        if texture_filename := texture_maps.get("diffuse"):
             # diffuse texture color connection
             output_socket = tex_diffuse.outputs["Color"]
             input_socket = principled_bsdf.inputs["Base Color"]
@@ -213,7 +217,7 @@ def build_shader_node_tree(
         # input_socket = principled_bsdf.inputs["Roughness"]
         # node_tree.links.new(input_socket, output_socket)
 
-        if texture_filename := uev_materials.get("normal"):
+        if texture_filename := texture_maps.get("normal"):
             if invert_green_channel:
                 # normal texture color connection
                 output_socket = tex_normal.outputs["Color"]
