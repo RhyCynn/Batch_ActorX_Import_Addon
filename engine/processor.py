@@ -21,8 +21,6 @@ echo = Echo()
 def walk_import_dict(context, import_dict: dict):
     """traverse the import dictionary and load the models, meshes and animations."""
 
-    print(list(import_dict))
-
     # models are in a flat list due to the way blenders pointer properties and collections work
     # linked / nested models are connected by names
     for model in import_dict["model_list"]:
