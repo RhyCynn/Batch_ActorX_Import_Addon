@@ -23,19 +23,6 @@ echo = Echo()
 
 
 # --------------------------------------------------------------------------------------------------
-# def dump_asset_paths(driver_object):
-#     asset_folders = []
-#     for asset_folder in driver_object.asset_folder_list:
-#         list_item = {
-#             key: getattr(asset_folder, key)
-#             for key in asset_folder.bl_rna.properties.keys()
-#             if key not in ["name", "rna_type"]
-#         }
-#         asset_folders.append(list_item)
-#     return asset_folders
-
-
-# --------------------------------------------------------------------------------------------------
 def walk_import_nodes(context: Context, source_repr: str):
     """traverse the nodes and import the files."""
 
@@ -115,7 +102,6 @@ def walk_import_nodes(context: Context, source_repr: str):
         """process a model node. chained nodes are processed recursively."""
 
         model_node = model_socket.links[0].from_node
-
         ax_model_props = model_node.ax_model_props
 
         # if no filename was set then brute force exit the script
@@ -140,8 +126,8 @@ def walk_import_nodes(context: Context, source_repr: str):
         }
 
         if parent:
-            model_item["parent_name"] = parent["ax_model_props"]["display_name"]
-            model_item["parent_model"] = parent["ax_model_props"]["display_name"]
+            model_item["parent_name"] = parent.ax_model_props.display_name
+            model_item["parent_model"] = parent.ax_model_props.display_name
 
         model_item["ueviewer_mat"] = {k: v for k, v in ax_model_props["ueviewer_mat"].items()}
         model_item["texture_path"] = {k: v for k, v in ax_model_props["texture_path"].items()}
@@ -183,7 +169,7 @@ def walk_import_nodes(context: Context, source_repr: str):
         import_drivers["model_list"] = []
 
         for model_socket in model_sockets:
-            walk_model_node(model_socket, import_drivers)
+            walk_model_node(model_socket, import_drivers, parent=None)
 
         mesh_sockets = [
             x for x in actorx_import_node.inputs if x.is_linked and x.name == "mesh_socket"
@@ -193,8 +179,6 @@ def walk_import_nodes(context: Context, source_repr: str):
 
         for mesh_socket in mesh_sockets:
             walk_mesh_node(mesh_socket, None, import_drivers)
-
-        print(list(import_drivers))
 
         return import_drivers
 

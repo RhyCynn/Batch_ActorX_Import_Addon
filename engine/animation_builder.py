@@ -17,6 +17,7 @@ from dataclasses import dataclass
 
 import bpy
 from mathutils import Matrix
+from bpy_extras import anim_utils
 
 from ..core.core import Configuration as config
 from ..core.logging import Echo, SectionHeader
@@ -112,13 +113,10 @@ def build_animation(
     psa_bones = anim_data.psa_bones
     actions = anim_data.actions
 
-    # if armature_object.animation_data is None:
-    if not armature_object.animation_data:
-        armature_object.animation_data_create()
+    armature_animation_data = armature_object.animation_data_create()
 
     nla_track = armature_object.animation_data.nla_tracks.new()
     nla_track.name = anim_props["display_name"]
-    # nla_strip_start = 1
 
     psa_bones = preprocess_psa_bones(armature_object, psa_bones)
 
@@ -126,19 +124,21 @@ def build_animation(
 
     total_actions = len(actions)
 
-    # for action_name, action in sorted(actions):
     for index, [action_name, action] in enumerate(actions):
         echo.message(f"Current action {index + 1} of {total_actions}: {action_name}")
+
         if action_name in config.action_filters["ignore"]:
             echo.message(f"Ignoring action: {action_name}", indent_step=1)
             continue
 
-        # action_name = f"{armature_object.name}_{action_name}"
-
         blender_action = bpy.data.actions.new(action_name)
-        armature_object.animation_data.action = blender_action
+        action_slot = blender_action.slots.new(armature_object.id_type, "Slot")
+        channelbag = anim_utils.action_ensure_channelbag_for_slot(blender_action, action_slot)
 
-        psa_bones = create_fcurves(psa_bones=psa_bones, blender_action=blender_action)
+        armature_animation_data.action = blender_action
+        armature_animation_data.action_slot = action_slot
+
+        psa_bones = create_fcurves(psa_bones=psa_bones, blender_action=channelbag)
 
         keyframe_index = 0
         nla_strip_start_frame = total_max_raw_frames
@@ -228,7 +228,7 @@ def build_animation(
 
         armature_object.animation_data.action = None
 
-    nla_track.mute = True
+        nla_track.mute = False
 
     if total_max_raw_frames > PreviousAnimation.frame_end:
         context.scene.frame_end = total_max_raw_frames

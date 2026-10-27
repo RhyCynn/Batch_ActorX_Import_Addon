@@ -141,6 +141,26 @@ def build_shader_node_tree(
     mesh_object: Object, texture_maps: dict[str, str], invert_green_channel: bool
 ) -> None:
     """set up the blender shaders from the ueviewer materials."""
+    
+    blender_version = bpy.app.version
+    
+    if blender_version >= (5,0,0):
+        rgb_separate_node = "ShaderNodeSeparateColor"
+        rgb_combine_node = "ShaderNodeCombineColor"
+        rgb_separate_node_input = "Color"
+        rgb_combine_node_output = "Color"
+        socket_red = "Red"
+        socket_green = "Green"
+        socket_blue = "Blue"
+        
+    else:
+        rgb_separate_node = "ShaderNodeSeparateRGB"
+        rgb_combine_node = "ShaderNodeCombineRGB"
+        rgb_separate_node_input = "Image"
+        rgb_combine_node_output = "Image"
+        socket_red = "R"
+        socket_green = "G"
+        socket_blue = "B"
 
     for blender_material in mesh_object.data.materials:
         # get the material node tree and principled bsdf
@@ -179,13 +199,32 @@ def build_shader_node_tree(
 
             if invert_green_channel:
                 echo.message("Invert Normal Green Channel", indent_step=-1)
-                rgb_separate = node_tree.nodes.new("ShaderNodeSeparateRGB")
+                
+                rgb_separate = node_tree.nodes.new(rgb_separate_node)
                 rgb_separate.name = "rgb_separate"
                 rgb_separate.label = "RGB Separate"
-
-                rgb_combine = node_tree.nodes.new("ShaderNodeCombineRGB")
+                
+                rgb_combine = node_tree.nodes.new(rgb_combine_node)
                 rgb_combine.name = "rgb_combine"
                 rgb_combine.label = "RGB Combine"
+            
+                # if blender_version >= (5,0,0):
+                #     rgb_separate = node_tree.nodes.new("ShaderNodeSeparateColor")
+                #     rgb_separate.name = "rgb_separate"
+                #     rgb_separate.label = "RGB Separate"
+
+                #     rgb_combine = node_tree.nodes.new("ShaderNodeCombineColor")
+                #     rgb_combine.name = "rgb_combine"
+                #     rgb_combine.label = "RGB Combine"
+                    
+                # else:
+                #     rgb_separate = node_tree.nodes.new("ShaderNodeSeparateRGB")
+                #     rgb_separate.name = "rgb_separate"
+                #     rgb_separate.label = "RGB Separate"
+
+                #     rgb_combine = node_tree.nodes.new("ShaderNodeCombineRGB")
+                #     rgb_combine.name = "rgb_combine"
+                #     rgb_combine.label = "RGB Combine"
 
                 invert_green = node_tree.nodes.new("ShaderNodeInvert")
                 invert_green.name = "invert_green"
@@ -221,30 +260,41 @@ def build_shader_node_tree(
             if invert_green_channel:
                 # normal texture color connection
                 output_socket = tex_normal.outputs["Color"]
-                input_socket = rgb_separate.inputs["Image"]
+                # input_socket = rgb_separate.inputs["Color"]
+                input_socket = rgb_separate.inputs[rgb_separate_node_input]
                 node_tree.links.new(input_socket, output_socket)
                 tex_normal.image.colorspace_settings.name = "Non-Color"
+                
+                if blender_version >= (5,0,0):
+                    socket_red = "Red"
+                    socket_green = "Green"
+                    socket_blue = "Blue"
+                    
+                else:
+                    socket_red = "R"
+                    socket_green = "G"
+                    socket_blue = "B"
 
                 # separate rgb connections
-                output_socket = rgb_separate.outputs["R"]
-                input_socket = rgb_combine.inputs["R"]
+                output_socket = rgb_separate.outputs[socket_red]
+                input_socket = rgb_combine.inputs[socket_red]
                 node_tree.links.new(input_socket, output_socket)
 
-                output_socket = rgb_separate.outputs["B"]
-                input_socket = rgb_combine.inputs["B"]
+                output_socket = rgb_separate.outputs[socket_blue]
+                input_socket = rgb_combine.inputs[socket_blue]
                 node_tree.links.new(input_socket, output_socket)
 
-                output_socket = rgb_separate.outputs["G"]
+                output_socket = rgb_separate.outputs[socket_green]
                 input_socket = invert_green.inputs["Color"]
                 node_tree.links.new(input_socket, output_socket)
 
                 # invert green connection
                 output_socket = invert_green.outputs["Color"]
-                input_socket = rgb_combine.inputs["G"]
+                input_socket = rgb_combine.inputs[socket_green]
                 node_tree.links.new(input_socket, output_socket)
 
                 # combine rgb connection
-                output_socket = rgb_combine.outputs["Image"]
+                output_socket = rgb_combine.outputs[rgb_combine_node_output]
                 input_socket = normal_map.inputs["Color"]
                 node_tree.links.new(input_socket, output_socket)
 

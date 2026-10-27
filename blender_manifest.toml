@@ -8,7 +8,7 @@ type = "add-on"
 website = "https://github.com/RhyCynn/batch_actorx_import_addon"
 tags = ["Import-Export"]
 blender_version_min = "4.2.0"
-blender_version_max = "4.9.9"
+blender_version_max = "5.3.0"
 license = ["SPDX:MIT"]
 wheels = [
     "./wheels/ruamel.yaml-0.18.10-py3-none-any.whl",
