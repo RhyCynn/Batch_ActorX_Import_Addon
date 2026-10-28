@@ -15,12 +15,13 @@ from bpy.types import Context, Mesh, Object
 from mathutils import Vector
 
 from ..core.core import MatFileReadError
-from ..core.logging import Echo
+from ..core.logging import Echo, SectionHeader
 
 echo = Echo()
 
 
 # --------------------------------------------------------------------------------------------------
+@SectionHeader()
 def build_materials(context: Context, mesh_object: Mesh, prop: dict) -> None:
     ueviewer_mat = prop["ueviewer_mat"]["file_path"]
     texture_path = prop["texture_path"]["file_path"]
@@ -108,6 +109,7 @@ def find_texture(search_path: Path, texture_name: str) -> Path | None:
 
 
 # --------------------------------------------------------------------------------------------------
+@SectionHeader()
 def read_mat_file(material_file: str) -> dict[str, str] | None:
     """read a ueviewer .mat file and parse the contents."""
 
@@ -137,13 +139,15 @@ def read_mat_file(material_file: str) -> dict[str, str] | None:
 
 
 # --------------------------------------------------------------------------------------------------
+@SectionHeader()
 def build_shader_node_tree(
     mesh_object: Object, texture_maps: dict[str, str], invert_green_channel: bool
 ) -> None:
     """set up the blender shaders from the ueviewer materials."""
-    
+
+    # The blender version is used to execute different code blocks for 4.x and 5.x
     blender_version = bpy.app.version
-    
+
     if blender_version >= (5,0,0):
         rgb_separate_node = "ShaderNodeSeparateColor"
         rgb_combine_node = "ShaderNodeCombineColor"
@@ -152,7 +156,7 @@ def build_shader_node_tree(
         socket_red = "Red"
         socket_green = "Green"
         socket_blue = "Blue"
-        
+
     else:
         rgb_separate_node = "ShaderNodeSeparateRGB"
         rgb_combine_node = "ShaderNodeCombineRGB"
@@ -199,32 +203,14 @@ def build_shader_node_tree(
 
             if invert_green_channel:
                 echo.message("Invert Normal Green Channel", indent_step=-1)
-                
+
                 rgb_separate = node_tree.nodes.new(rgb_separate_node)
                 rgb_separate.name = "rgb_separate"
                 rgb_separate.label = "RGB Separate"
-                
+
                 rgb_combine = node_tree.nodes.new(rgb_combine_node)
                 rgb_combine.name = "rgb_combine"
                 rgb_combine.label = "RGB Combine"
-            
-                # if blender_version >= (5,0,0):
-                #     rgb_separate = node_tree.nodes.new("ShaderNodeSeparateColor")
-                #     rgb_separate.name = "rgb_separate"
-                #     rgb_separate.label = "RGB Separate"
-
-                #     rgb_combine = node_tree.nodes.new("ShaderNodeCombineColor")
-                #     rgb_combine.name = "rgb_combine"
-                #     rgb_combine.label = "RGB Combine"
-                    
-                # else:
-                #     rgb_separate = node_tree.nodes.new("ShaderNodeSeparateRGB")
-                #     rgb_separate.name = "rgb_separate"
-                #     rgb_separate.label = "RGB Separate"
-
-                #     rgb_combine = node_tree.nodes.new("ShaderNodeCombineRGB")
-                #     rgb_combine.name = "rgb_combine"
-                #     rgb_combine.label = "RGB Combine"
 
                 invert_green = node_tree.nodes.new("ShaderNodeInvert")
                 invert_green.name = "invert_green"
@@ -264,12 +250,12 @@ def build_shader_node_tree(
                 input_socket = rgb_separate.inputs[rgb_separate_node_input]
                 node_tree.links.new(input_socket, output_socket)
                 tex_normal.image.colorspace_settings.name = "Non-Color"
-                
+
                 if blender_version >= (5,0,0):
                     socket_red = "Red"
                     socket_green = "Green"
                     socket_blue = "Blue"
-                    
+
                 else:
                     socket_red = "R"
                     socket_green = "G"

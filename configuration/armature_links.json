@@ -1,4 +1,10 @@
 {
+    "no_link": {
+        "name": "No Link",
+        "description": "No Link.",
+        "source_bone": "",
+        "target_bone": ""
+    },
     "head_to_body": {
         "name": "Head to Body",
         "description": "Links the import armature bone 'Dummy_Neck' to the target armature bone 'Bip01-Neck'.",

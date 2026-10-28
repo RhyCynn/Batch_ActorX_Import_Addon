@@ -104,6 +104,9 @@ def build_animation(
 ):
     """build the animation and parent it to an armature."""
 
+    # The blender version is used to execute different code blocks for 4.x and 5.x
+    blender_version = bpy.app.version
+
     echo.value(message="Importing Animation", width=20, value=anim_props["display_name"])
 
     anim_data = AnimData(anim_props["file_path"])
@@ -132,13 +135,20 @@ def build_animation(
             continue
 
         blender_action = bpy.data.actions.new(action_name)
-        action_slot = blender_action.slots.new(armature_object.id_type, "Slot")
-        channelbag = anim_utils.action_ensure_channelbag_for_slot(blender_action, action_slot)
+
+        if blender_version >= (5,0,0):
+            action_slot = blender_action.slots.new(armature_object.id_type, "Slot")
+            channelbag = anim_utils.action_ensure_channelbag_for_slot(blender_action, action_slot)
+        else:
+            print("blender version 4.x")
 
         armature_animation_data.action = blender_action
-        armature_animation_data.action_slot = action_slot
 
-        psa_bones = create_fcurves(psa_bones=psa_bones, blender_action=channelbag)
+        if blender_version >= (5,0,0):
+            armature_animation_data.action_slot = action_slot
+            psa_bones = create_fcurves(psa_bones=psa_bones, blender_action=channelbag)
+        else:
+            psa_bones = create_fcurves(psa_bones=psa_bones, blender_action=blender_action)
 
         keyframe_index = 0
         nla_strip_start_frame = total_max_raw_frames

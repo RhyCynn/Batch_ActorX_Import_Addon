@@ -112,7 +112,8 @@ class Configuration:
 
     # definitions and enum property settings for linking armatures by pose bones
     armature_links: ClassVar[dict] = {}
-    parent_link: ClassVar[list] = [("no_link", "No Link", "")]
+    parent_link: ClassVar[list] = []
+    # parent_link: ClassVar[list] = [("no_link", "No Link", "")]
 
     # list of texture maps
     asset_filenames: ClassVar[dict] = {}
