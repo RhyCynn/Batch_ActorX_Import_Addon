@@ -190,4 +190,7 @@ def build_model(context: bpy.types.Context, model_props: AxModel):
                 [pose_bone.length * 0.3, pose_bone.length * 0.3, pose_bone.length * 0.3]
             )
 
+    if model_props["hide_armature"]:
+        armature_object.hide_viewport = True
+
     return armature_object

@@ -11,6 +11,7 @@
     },
     "model_node": {
         "default_width": 300,
+        "hide_armature": false,
         "hide_texture_maps": true,
         "hide_advanced_options": true,
         "hide_model_linking": false,

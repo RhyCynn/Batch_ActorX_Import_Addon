@@ -34,7 +34,7 @@ def get_conversion_matrices(props) -> tuple[type[Matrix], type[Matrix]]:
 
 # --------------------------------------------------------------------------------------------------
 @SectionHeader()
-def build_object_names(display_name: str) -> dict:
+def build_object_names(display_name: str) -> dict[str, str]:
     names: dict = {}
     prefixes = config.prefixes
 
@@ -61,7 +61,7 @@ def link_object(
 
 # --------------------------------------------------------------------------------------------------
 @SectionHeader()
-def get_collection(collection_name: str) -> bpy.types.Collection:
+def get_collection(collection_name: str) -> bpy.types.Collection | None:
     """this returns a collection, creating one if it doesn't exist."""
 
     # ----------------------------------------------------------------------------------------------
