@@ -79,6 +79,7 @@
         "plus_vector": "010",
         "detect_reversed_bones": true,
         "show_bones_as_joints": true,
+        "hide_armature": false,
         "material_index": -1,
         "mesh_index": -1,
         "animation_index": -1,
