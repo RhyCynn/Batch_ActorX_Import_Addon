@@ -181,6 +181,7 @@ class AxModel(AxFileBase, AxModelAndMeshBase, AxModelMeshAndAnimationBase, Prope
     import_what: StringProperty(default="actorx_model")
     filter_glob: StringProperty(name="Filter Glob", default="*.psk;*.pskx")
 
+    hide_armature: BoolProperty(name="Hide Armature", default=False)
     hide_texture_maps: BoolProperty(name="Hide Texture Maps", default=True)
     hide_advanced_options: BoolProperty(name="Hide Advanced Options", default=True)
 

@@ -183,6 +183,7 @@ def draw_ax_model_props(
     col.prop(model_node.ax_model_props, "conjugate_root")
     col.prop(model_node.ax_model_props, "detect_reversed_bones")
     col.prop(model_node.ax_model_props, "show_bones_as_joints")
+    col.prop(model_node.ax_model_props, "hide_armature")
 
     if not config.user_settings["model_node"]["hide_model_linking"]:
         col.prop(model_node.ax_model_props, "parent_link")

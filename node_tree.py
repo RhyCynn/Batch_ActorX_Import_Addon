@@ -50,6 +50,10 @@ class ActorXNodes(NodeCategory):
 
 # --------------------------------------------------------------------------------------------------
 # custom nodes can be set up here to add entries that override properties on the base node
+
+# "ActorX Model: Link Head" and "ActorX Model: Link Hair" are examples of custom nodes that can be
+# added from the add node menu like any other node. They set the parent link dropdown to the
+# appropriate selection and turn off conjugate root.
 node_categories = [
     ActorXNodes(
         "ACTORX_IMPORT",
@@ -57,16 +61,22 @@ node_categories = [
         items=[
             NodeItem("ActorXImportNode"),
             NodeItem("ActorXModelNode"),
-            # NodeItem(
-            #     "ActorXModelNode",
-            #     label="ActorX Model: Link Head",
-            #     settings={"armature_link": repr("head_to_body")},
-            # ),
-            # NodeItem(
-            #     "ActorXModelNode",
-            #     label="ActorX Model: Link Hair",
-            #     settings={"armature_link": repr("hair_to_head")},
-            # ),
+            NodeItem(
+                "ActorXModelNode",
+                label="ActorX Model: Link Head",
+                settings={
+                    "ax_model_props.parent_link": repr("head_to_body"),
+                    "ax_model_props.conjugate_root": repr(False),
+                },
+            ),
+            NodeItem(
+                "ActorXModelNode",
+                label="ActorX Model: Link Hair",
+                settings={
+                    "ax_model_props.parent_link": repr("hair_to_head"),
+                    "ax_model_props.conjugate_root": repr(False),
+                },
+            ),
             NodeItem("ActorXMeshNode"),
             NodeItem("ActorXAnimationNode"),
         ],
